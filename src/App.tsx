@@ -9,10 +9,13 @@ import Login from "./Login";
 import ParentClass from "./ParentClass";
 import Profile from "./Profile";
 import SignUp from "./SignUp";
+import StoreData from "./StoreData";
 import UseContextEx from "./UseContextEx";
 import UseEffectMount from "./UseEffectMount";
 import UseEffectUpdate from "./UseEffectUpdate";
 import UseRefEx from "./UseRefEx";
+import UsersReducerUI from "./UsersReducerUI";
+import CheckReducer from "./CheckReducer";
 
 function App() {
   return (
@@ -36,6 +39,10 @@ function App() {
       <Route path={"/useEffectUpdate"} component={UseEffectUpdate} exact={true} />
       <Route path={"/useContext"} component={UseContextEx} exact={true} />
       <Route path={"/useRef"} component={UseRefEx} exact={true} />
+      {/* reducer */}
+      <Route path={"/storeData"} component={StoreData} exact={true} />
+      <Route path={"/userReducersUI"} component={UsersReducerUI} exact={true} />
+      <Route path={"/checkReducer"} component={CheckReducer} exact={true} />
 
 
       {/* ui project */}
