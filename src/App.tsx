@@ -7,7 +7,6 @@ import FCParent, { FCPChild } from "./FCParent";
 import Home from "./Home";
 import Login from "./Login";
 import ParentClass from "./ParentClass";
-import Profile from "./Profile";
 import SignUp from "./SignUp";
 import StoreData from "./StoreData";
 import UseContextEx from "./UseContextEx";
@@ -16,8 +15,17 @@ import UseEffectUpdate from "./UseEffectUpdate";
 import UseRefEx from "./UseRefEx";
 import UsersReducerUI from "./UsersReducerUI";
 import CheckReducer from "./CheckReducer";
+import Profile from "./Profile";
+import { useContext } from "react";
+import { UserContext } from "./UserProvider";
 
 function App() {
+  const userContext = useContext(UserContext);
+  const renderProfile = () => {
+    if (userContext && userContext.uid) return <Profile />;
+    return <Redirect to="/Home" />
+  }
+
   return (
     <Switch>
       {/* simple routing */}
@@ -48,7 +56,7 @@ function App() {
       {/* ui project */}
       <Route path={"/login"} component={Login} exact={true} />
       <Route path={"/signUp"} component={SignUp} exact={true} />
-      <Route path={"/profile"} component={Profile} exact={true} />
+      <Route path={"/profile"} render={renderProfile} exact={true} />
       <Route path={"/home"} component={Home} exact={true} />
       <Route path={"/"} render={() => <Redirect to="/home" />} exact={true} />
 

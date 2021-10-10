@@ -3,9 +3,12 @@ import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import Footer from "./Footer";
 import { useFormStyles } from "./FormUI";
+import firebase from "firebase/app";
+import "firebase/auth";
+import ErrorMessage from "./ErrorMessage";
+import { useState } from "react";
 
-
-interface ISignUp {
+export interface ISignUp {
     firstName: string,
     lastName: string,
     emailAddress: string;
@@ -24,6 +27,7 @@ export default function SignUp() {
         handleSubmit,
         formState: { errors },
     } = useForm<ISignUp>();
+    const [errorMessage, setErrorMessage] = useState("");
     const renderButtons = () => {
         return (
             <Footer
@@ -142,17 +146,25 @@ export default function SignUp() {
         );
     };
 
-
-
-
-
+    const onFormSubmit = async (signUp: ISignUp) => {
+        try {
+            const credentials = await firebase.auth().createUserWithEmailAndPassword(signUp.emailAddress, signUp.password);
+            credentials.user?.updateProfile({ displayName: `${signUp.firstName} ${signUp.lastName}` });
+            history.push("/");
+            return true;
+        }
+        catch (error: any) {
+            return setErrorMessage(error.message);
+        }
+    }
 
     return (
         <div className={classes.root}>
-            <form className={classes.container}>
+            <form className={classes.container} onSubmit={handleSubmit(onFormSubmit)}>
                 <Typography variant="h4">Welcome to the SignUp page</Typography>
                 {renderForm()}
                 {renderButtons()}
+                {errorMessage && <ErrorMessage message={errorMessage} />}
             </form>
         </div>
     )

@@ -1,6 +1,9 @@
 import {TextField, Typography } from "@material-ui/core";
+import firebase from "firebase";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router"
+import ErrorMessage from "./ErrorMessage";
 import Footer from "./Footer";
 import { useFormStyles } from "./FormUI";
 
@@ -21,6 +24,7 @@ export default function Login() {
         handleSubmit,
         formState: { errors },
     } = useForm<ILogin>();
+    const [errorMessage, setErrorMessage] = useState("");
     const renderButtons = () => {
         return (
             <Footer
@@ -90,13 +94,25 @@ export default function Login() {
         );
     };
 
+    const onFormSubmit = async (signIn: ILogin) => {
+        try {
+            await firebase.auth().signInWithEmailAndPassword(signIn.emailAddress, signIn.password);
+            history.push("/");
+            return true;
+        }
+        catch (error: any) {
+            return setErrorMessage(error.message);
+        }
+    }
+
 
     return (
         <div className={classes.root}>
-            <form className={classes.container}>
+            <form className={classes.container} onSubmit={handleSubmit(onFormSubmit)}>
                 <Typography variant="h4">Welcome to the Login page</Typography>
                 {renderForm()}
                 {renderButtons()}
+                {errorMessage && <ErrorMessage message={errorMessage} />}
             </form>
         </div>
     )
